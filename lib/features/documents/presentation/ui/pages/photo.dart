@@ -1,41 +1,45 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:linze/features/documents/domain/use_case/get_document_by_id_provider.dart';
+import 'package:linze/features/documents/presentation/controllers/document_controllers.dart';
 
-class FullScreenImagePage extends StatelessWidget {
-  final String imageUrl;
+class FullScreenImagePage extends ConsumerWidget {
+  final String id;
 
-  const FullScreenImagePage({super.key, required this.imageUrl});
+  const FullScreenImagePage({super.key, required this.id});
 
   @override
-  Widget build(BuildContext context) {
-    // 4. Створюємо Scaffold з прозорим AppBar для кнопки закриття
-    return Scaffold(
-      backgroundColor: Colors.black, // Чорний фон для фото
-      extendBodyBehindAppBar: true, // AppBar буде поверх контенту
+  Widget build(BuildContext context, WidgetRef ref) {
+    final asyncDocument = ref.watch(getDocumentByIdProvider(id));
+    return asyncDocument.whenData(
+      (data) =>  Scaffold(
+      backgroundColor: Colors.black,
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        backgroundColor: Colors.transparent, // Прозорий AppBar
+        backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.close, color: Colors.white, size: 30),
-          // 5. Функція закриття екрана
           onPressed: () => context.pop(),
         ),
       ),
       body: Center(
-        // 6. Обгортаємо в Hero з ТИМ САМИМ тегом
         child: Hero(
-          tag: imageUrl,
-          // 7. Додаємо можливість зуму (масштабування)
+          tag: data.imgPath,
           child: InteractiveViewer(
-            panEnabled: true, // Дозволяє переміщати
+            panEnabled: true,
             minScale: 0.5,
-            maxScale: 4.0, // Максимальний зум
+            maxScale: 4.0,
             child: Image.asset(
-              imageUrl,
-              fit: BoxFit.contain, // Вписуємо картинку повністю
+              data.imgPath,
+              fit: BoxFit.contain, 
             ),
           ),
         ),
-      ),
-    );
+      )
+      )
+      
+      ).asData?.value ?? CircularProgressIndicator();
+    
   }}

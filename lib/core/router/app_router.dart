@@ -27,11 +27,11 @@ final routerProvider = Provider<GoRouter>((ref) {
             },
             routes: [
               GoRoute(
-                path: '/photo/:path',
+                path: '/photo',
                 name: photoRoute,
                 builder: (context, state) {
-                  final imgPath = state.pathParameters['path']!;
-                  return FullScreenImagePage(imageUrl: imgPath);
+                  final id = state.pathParameters['id']!;
+                  return FullScreenImagePage(id: id);
                 },
               ),
             ],

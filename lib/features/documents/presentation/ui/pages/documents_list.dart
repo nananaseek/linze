@@ -29,8 +29,13 @@ class DocumentsListScreen extends ConsumerWidget {
             itemBuilder: (BuildContext context, int index) {
               final item = data[index];
               return InkWell(
+                borderRadius: .circular(10),
                 onTap: () => context.push('/docs/item/${item.id}'),
-                child: Item(name: item.name, imgPath: item.imgPath),
+                child: Item(
+                  name: item.name,
+                  imgPath: item.imgPath,
+                  docState: item.state,
+                ),
               );
             },
           ),
@@ -43,7 +48,10 @@ class DocumentsListScreen extends ConsumerWidget {
         );
       },
       loading: () {
-        return Scaffold(appBar: AppBar(title: Text('loading')));
+        return Scaffold(
+          appBar: AppBar(title: Text('loading')),
+          body: Center(child: CircularProgressIndicator()),
+        );
       },
     );
   }

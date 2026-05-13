@@ -1,10 +1,13 @@
 import 'package:equatable/equatable.dart';
 
+import 'state_enum_entity.dart';
+
 class DocumentEntity extends Equatable {
   final String id;
   final String name;
   final String content;
   final String imgPath;
+  final DocumentState state;
   final DateTime createdAt;
 
   const DocumentEntity({
@@ -13,6 +16,7 @@ class DocumentEntity extends Equatable {
     required this.imgPath,
     required this.content,
     required this.createdAt,
+    required this.state,
   });
 
   @override

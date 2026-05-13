@@ -25,9 +25,23 @@ class _HomePageState extends ConsumerState<HomePage> {
               child: Column(
                 mainAxisAlignment: .center,
                 children: [
+                  const Text('Click for create loading document'),
+                  ElevatedButton.icon(
+                    onPressed: () => state.testCreateLoadingDocument(),
+                    label: Text('Create loding document'),
+                  ),
+
+                  const Text('Click for create finished document'),
+                  ElevatedButton.icon(
+                    onPressed: () => state.testCreateFinishedDocument(),
+                    label: Text('Create Finished data'),
+                  ),
+
                   const Text('Click for del db'),
-                  ElevatedButton.icon(onPressed: 
-                  () => state.deleteAllDB(), label: Text('delete db'))
+                  ElevatedButton.icon(
+                    onPressed: () => state.deleteAllDB(),
+                    label: Text('delete db'),
+                  ),
                 ],
               ),
             ),
@@ -61,7 +75,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                       child: Container(
                         alignment: .center,
                         child: IconButton(
-                          onPressed: () => state.createDocument(),
+                          onPressed: () => print('Take photo'),
                           icon: Icon(
                             Icons.circle_sharp,
                             size: 50.h,

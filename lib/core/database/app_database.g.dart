@@ -4,7 +4,7 @@ part of 'app_database.dart';
 
 // ignore_for_file: type=lint
 class $DocumentsTable extends Documents
-    with TableInfo<$DocumentsTable, Document> {
+    with TableInfo<$DocumentsTable, DocumentEntity> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -53,6 +53,15 @@ class $DocumentsTable extends Documents
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  @override
+  late final GeneratedColumnWithTypeConverter<DocumentState, String> state =
+      GeneratedColumn<String>(
+        'state',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      ).withConverter<DocumentState>($DocumentsTable.$converterstate);
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -66,7 +75,14 @@ class $DocumentsTable extends Documents
     defaultValue: currentDateAndTime,
   );
   @override
-  List<GeneratedColumn> get $columns => [id, name, imgPath, content, createdAt];
+  List<GeneratedColumn> get $columns => [
+    id,
+    name,
+    imgPath,
+    content,
+    state,
+    createdAt,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -74,7 +90,7 @@ class $DocumentsTable extends Documents
   static const String $name = 'documents';
   @override
   VerificationContext validateIntegrity(
-    Insertable<Document> instance, {
+    Insertable<DocumentEntity> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -120,9 +136,9 @@ class $DocumentsTable extends Documents
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  Document map(Map<String, dynamic> data, {String? tablePrefix}) {
+  DocumentEntity map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Document(
+    return DocumentEntity(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}id'],
@@ -143,6 +159,12 @@ class $DocumentsTable extends Documents
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
       )!,
+      state: $DocumentsTable.$converterstate.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}state'],
+        )!,
+      ),
     );
   }
 
@@ -150,120 +172,17 @@ class $DocumentsTable extends Documents
   $DocumentsTable createAlias(String alias) {
     return $DocumentsTable(attachedDatabase, alias);
   }
+
+  static JsonTypeConverter2<DocumentState, String, String> $converterstate =
+      const EnumNameConverter<DocumentState>(DocumentState.values);
 }
 
-class Document extends DataClass implements Insertable<Document> {
-  final String id;
-  final String name;
-  final String imgPath;
-  final String content;
-  final DateTime createdAt;
-  const Document({
-    required this.id,
-    required this.name,
-    required this.imgPath,
-    required this.content,
-    required this.createdAt,
-  });
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['id'] = Variable<String>(id);
-    map['name'] = Variable<String>(name);
-    map['img_path'] = Variable<String>(imgPath);
-    map['content'] = Variable<String>(content);
-    map['created_at'] = Variable<DateTime>(createdAt);
-    return map;
-  }
-
-  DocumentsCompanion toCompanion(bool nullToAbsent) {
-    return DocumentsCompanion(
-      id: Value(id),
-      name: Value(name),
-      imgPath: Value(imgPath),
-      content: Value(content),
-      createdAt: Value(createdAt),
-    );
-  }
-
-  factory Document.fromJson(
-    Map<String, dynamic> json, {
-    ValueSerializer? serializer,
-  }) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Document(
-      id: serializer.fromJson<String>(json['id']),
-      name: serializer.fromJson<String>(json['name']),
-      imgPath: serializer.fromJson<String>(json['imgPath']),
-      content: serializer.fromJson<String>(json['content']),
-      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<String>(id),
-      'name': serializer.toJson<String>(name),
-      'imgPath': serializer.toJson<String>(imgPath),
-      'content': serializer.toJson<String>(content),
-      'createdAt': serializer.toJson<DateTime>(createdAt),
-    };
-  }
-
-  Document copyWith({
-    String? id,
-    String? name,
-    String? imgPath,
-    String? content,
-    DateTime? createdAt,
-  }) => Document(
-    id: id ?? this.id,
-    name: name ?? this.name,
-    imgPath: imgPath ?? this.imgPath,
-    content: content ?? this.content,
-    createdAt: createdAt ?? this.createdAt,
-  );
-  Document copyWithCompanion(DocumentsCompanion data) {
-    return Document(
-      id: data.id.present ? data.id.value : this.id,
-      name: data.name.present ? data.name.value : this.name,
-      imgPath: data.imgPath.present ? data.imgPath.value : this.imgPath,
-      content: data.content.present ? data.content.value : this.content,
-      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('Document(')
-          ..write('id: $id, ')
-          ..write('name: $name, ')
-          ..write('imgPath: $imgPath, ')
-          ..write('content: $content, ')
-          ..write('createdAt: $createdAt')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(id, name, imgPath, content, createdAt);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is Document &&
-          other.id == this.id &&
-          other.name == this.name &&
-          other.imgPath == this.imgPath &&
-          other.content == this.content &&
-          other.createdAt == this.createdAt);
-}
-
-class DocumentsCompanion extends UpdateCompanion<Document> {
+class DocumentsCompanion extends UpdateCompanion<DocumentEntity> {
   final Value<String> id;
   final Value<String> name;
   final Value<String> imgPath;
   final Value<String> content;
+  final Value<DocumentState> state;
   final Value<DateTime> createdAt;
   final Value<int> rowid;
   const DocumentsCompanion({
@@ -271,6 +190,7 @@ class DocumentsCompanion extends UpdateCompanion<Document> {
     this.name = const Value.absent(),
     this.imgPath = const Value.absent(),
     this.content = const Value.absent(),
+    this.state = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
@@ -279,17 +199,20 @@ class DocumentsCompanion extends UpdateCompanion<Document> {
     required String name,
     required String imgPath,
     required String content,
+    required DocumentState state,
     this.createdAt = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        name = Value(name),
        imgPath = Value(imgPath),
-       content = Value(content);
-  static Insertable<Document> custom({
+       content = Value(content),
+       state = Value(state);
+  static Insertable<DocumentEntity> custom({
     Expression<String>? id,
     Expression<String>? name,
     Expression<String>? imgPath,
     Expression<String>? content,
+    Expression<String>? state,
     Expression<DateTime>? createdAt,
     Expression<int>? rowid,
   }) {
@@ -298,6 +221,7 @@ class DocumentsCompanion extends UpdateCompanion<Document> {
       if (name != null) 'name': name,
       if (imgPath != null) 'img_path': imgPath,
       if (content != null) 'content': content,
+      if (state != null) 'state': state,
       if (createdAt != null) 'created_at': createdAt,
       if (rowid != null) 'rowid': rowid,
     });
@@ -308,6 +232,7 @@ class DocumentsCompanion extends UpdateCompanion<Document> {
     Value<String>? name,
     Value<String>? imgPath,
     Value<String>? content,
+    Value<DocumentState>? state,
     Value<DateTime>? createdAt,
     Value<int>? rowid,
   }) {
@@ -316,6 +241,7 @@ class DocumentsCompanion extends UpdateCompanion<Document> {
       name: name ?? this.name,
       imgPath: imgPath ?? this.imgPath,
       content: content ?? this.content,
+      state: state ?? this.state,
       createdAt: createdAt ?? this.createdAt,
       rowid: rowid ?? this.rowid,
     );
@@ -336,6 +262,11 @@ class DocumentsCompanion extends UpdateCompanion<Document> {
     if (content.present) {
       map['content'] = Variable<String>(content.value);
     }
+    if (state.present) {
+      map['state'] = Variable<String>(
+        $DocumentsTable.$converterstate.toSql(state.value),
+      );
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -352,6 +283,7 @@ class DocumentsCompanion extends UpdateCompanion<Document> {
           ..write('name: $name, ')
           ..write('imgPath: $imgPath, ')
           ..write('content: $content, ')
+          ..write('state: $state, ')
           ..write('createdAt: $createdAt, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -376,6 +308,7 @@ typedef $$DocumentsTableCreateCompanionBuilder =
       required String name,
       required String imgPath,
       required String content,
+      required DocumentState state,
       Value<DateTime> createdAt,
       Value<int> rowid,
     });
@@ -385,6 +318,7 @@ typedef $$DocumentsTableUpdateCompanionBuilder =
       Value<String> name,
       Value<String> imgPath,
       Value<String> content,
+      Value<DocumentState> state,
       Value<DateTime> createdAt,
       Value<int> rowid,
     });
@@ -416,6 +350,12 @@ class $$DocumentsTableFilterComposer
   ColumnFilters<String> get content => $composableBuilder(
     column: $table.content,
     builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<DocumentState, DocumentState, String>
+  get state => $composableBuilder(
+    column: $table.state,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
@@ -453,6 +393,11 @@ class $$DocumentsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get state => $composableBuilder(
+    column: $table.state,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -480,6 +425,9 @@ class $$DocumentsTableAnnotationComposer
   GeneratedColumn<String> get content =>
       $composableBuilder(column: $table.content, builder: (column) => column);
 
+  GeneratedColumnWithTypeConverter<DocumentState, String> get state =>
+      $composableBuilder(column: $table.state, builder: (column) => column);
+
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 }
@@ -489,14 +437,17 @@ class $$DocumentsTableTableManager
         RootTableManager<
           _$AppDatabase,
           $DocumentsTable,
-          Document,
+          DocumentEntity,
           $$DocumentsTableFilterComposer,
           $$DocumentsTableOrderingComposer,
           $$DocumentsTableAnnotationComposer,
           $$DocumentsTableCreateCompanionBuilder,
           $$DocumentsTableUpdateCompanionBuilder,
-          (Document, BaseReferences<_$AppDatabase, $DocumentsTable, Document>),
-          Document,
+          (
+            DocumentEntity,
+            BaseReferences<_$AppDatabase, $DocumentsTable, DocumentEntity>,
+          ),
+          DocumentEntity,
           PrefetchHooks Function()
         > {
   $$DocumentsTableTableManager(_$AppDatabase db, $DocumentsTable table)
@@ -516,6 +467,7 @@ class $$DocumentsTableTableManager
                 Value<String> name = const Value.absent(),
                 Value<String> imgPath = const Value.absent(),
                 Value<String> content = const Value.absent(),
+                Value<DocumentState> state = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => DocumentsCompanion(
@@ -523,6 +475,7 @@ class $$DocumentsTableTableManager
                 name: name,
                 imgPath: imgPath,
                 content: content,
+                state: state,
                 createdAt: createdAt,
                 rowid: rowid,
               ),
@@ -532,6 +485,7 @@ class $$DocumentsTableTableManager
                 required String name,
                 required String imgPath,
                 required String content,
+                required DocumentState state,
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => DocumentsCompanion.insert(
@@ -539,6 +493,7 @@ class $$DocumentsTableTableManager
                 name: name,
                 imgPath: imgPath,
                 content: content,
+                state: state,
                 createdAt: createdAt,
                 rowid: rowid,
               ),
@@ -554,14 +509,17 @@ typedef $$DocumentsTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
       $DocumentsTable,
-      Document,
+      DocumentEntity,
       $$DocumentsTableFilterComposer,
       $$DocumentsTableOrderingComposer,
       $$DocumentsTableAnnotationComposer,
       $$DocumentsTableCreateCompanionBuilder,
       $$DocumentsTableUpdateCompanionBuilder,
-      (Document, BaseReferences<_$AppDatabase, $DocumentsTable, Document>),
-      Document,
+      (
+        DocumentEntity,
+        BaseReferences<_$AppDatabase, $DocumentsTable, DocumentEntity>,
+      ),
+      DocumentEntity,
       PrefetchHooks Function()
     >;
 

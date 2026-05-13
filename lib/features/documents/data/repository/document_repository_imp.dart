@@ -11,14 +11,17 @@ class DocumentRepositoryImpl implements IDocumentRepository {
 
   @override
   Future<List<DocumentEntity>> getAllDocuments() async {
-    final rows = await _db.select(_db.documents).get();
-    return rows.map((row) => _mapToEntity(row)).toList();
+    return await _db.select(_db.documents).get();
+  }
+
+  @override
+  Stream<List<DocumentEntity>> watchAllDocuments() {
+    return _db.select(_db.documents).watch();
   }
 
   @override
   Future<DocumentEntity> getDocumentById(String id) async {
-    final data = (_db.select(_db.documents)..where((target) => target.id.equals(id))).getSingle();
-    return _mapToEntity(await data);
+    return await (_db.select(_db.documents)..where((target) => target.id.equals(id))).getSingle();
   }
 
   @override
@@ -29,6 +32,7 @@ class DocumentRepositoryImpl implements IDocumentRepository {
             name: doc.name,
             content: doc.content,
             imgPath: doc.imgPath,
+            state: doc.state,
             createdAt: Value(doc.createdAt),
           ),
         );
@@ -39,13 +43,4 @@ class DocumentRepositoryImpl implements IDocumentRepository {
     await (_db.delete(_db.documents)..where((t) => t.id.equals(id))).go();
   }
 
-  DocumentEntity _mapToEntity(Document data) {
-    return DocumentEntity(
-      id: data.id,
-      name: data.name,
-      content: data.content,
-      imgPath: data.imgPath,
-      createdAt: data.createdAt,
-    );
-  }
 }

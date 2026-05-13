@@ -1,12 +1,12 @@
 import 'package:linze/features/documents/domain/entity/document_entity.dart';
 import 'package:linze/features/documents/domain/repository/i_document_repository.dart';
 
-class GetDocumentByIdUserCase {
+class WatchAllDocumentsUserCase {
   final IDocumentRepository repository;
 
-  GetDocumentByIdUserCase(this.repository);
+  WatchAllDocumentsUserCase(this.repository);
 
-  Future<DocumentEntity> execute(String id) async {
-    return repository.getDocumentById(id);
+  Stream<List<DocumentEntity>> execute() {
+    return repository.watchAllDocuments();
   }
 }

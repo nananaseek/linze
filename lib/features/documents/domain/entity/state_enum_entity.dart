@@ -1,0 +1,4 @@
+enum DocumentState{
+  loding,
+  finish
+}
