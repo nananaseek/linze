@@ -1,5 +1,5 @@
 import 'package:linze/features/documents/presentation/controllers/document_controllers.dart';
-import 'package:linze/features/home/domain/user_case/create_document_data_provider.dart';
+import 'package:linze/features/home/domain/user_case/init_document_data_provider.dart';
 import 'package:linze/features/home/domain/user_case/test_create_finished_document_data_provider.dart';
 import 'package:linze/features/home/domain/user_case/test_create_loading_document_data_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -14,20 +14,28 @@ class HomePageController extends _$HomePageController {
   }
 
   // TODO delete this method in prod
-  Future<void> deleteAllDB() async => await ref.watch(documentControllerProvider.notifier).deleteAllDB();
+  Future<void> deleteAllDB() async => await ref.read(documentControllerProvider.notifier).deleteAllDB();
   
-  Future<void> createDocument() async {
-    final usecase = ref.watch(createDocumentDataUserCaseProvider);
-    await usecase.execute();
+  Future<void> initDocumentFromCamera({required String name, required String imgPath,}) async {
+    final usecase = ref.read(initDocumentDataUserCaseProvider);
+    await usecase.execute(name: name, imgPath: imgPath);
+  }
+
+  Future<void> initDocumentFromGallery({required String imgPath,}) async {
+    final usecase = ref.read(initDocumentDataUserCaseProvider);
+
+    final imageName = imgPath.split('/').last;
+    await usecase.execute(name: imageName, imgPath: imgPath);
+
   }
 
   Future<void> testCreateLoadingDocument() async {
-    final usecase = ref.watch(testCreateLoadingDocumentDataUserCaseProvider);
+    final usecase = ref.read(testCreateLoadingDocumentDataUserCaseProvider);
     await usecase.execute();
   }
 
   Future<void> testCreateFinishedDocument() async {
-    final usecase = ref.watch(testCreateFinishedDocumentDataUserCaseProvider);
+    final usecase = ref.read(testCreateFinishedDocumentDataUserCaseProvider);
     await usecase.execute();
   }
 }

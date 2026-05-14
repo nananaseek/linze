@@ -1,4 +1,3 @@
-// data/repositories/document_repository_impl.dart
 import 'package:drift/drift.dart';
 import 'package:linze/core/database/app_database.dart';
 import 'package:linze/features/documents/domain/entity/document_entity.dart';
@@ -21,26 +20,41 @@ class DocumentRepositoryImpl implements IDocumentRepository {
 
   @override
   Future<DocumentEntity> getDocumentById(String id) async {
-    return await (_db.select(_db.documents)..where((target) => target.id.equals(id))).getSingle();
+    return await (_db.select(
+      _db.documents,
+    )..where((target) => target.id.equals(id))).getSingle();
   }
 
   @override
-  Future<void> addDocument(DocumentEntity doc) async {
-    await _db.into(_db.documents).insert(
+  Future<void> initDocument(DocumentEntity doc) async {
+    await _db
+        .into(_db.documents)
+        .insert(
           DocumentsCompanion.insert(
             id: doc.id,
             name: doc.name,
-            content: doc.content,
+            content: Value(doc.content),
             imgPath: doc.imgPath,
             state: doc.state,
-            createdAt: Value(doc.createdAt),
+            createdAt: doc.createdAt,
           ),
         );
+  }
+
+  @override
+  Future<void> createDocument(DocumentEntity doc) async {
+    await (_db.update(
+      _db.documents,
+    )..where((target) => target.id.equals(doc.id))).write(
+      DocumentsCompanion(
+        content: Value(doc.content), 
+        state: Value(doc.state)
+      ),
+    );
   }
 
   @override
   Future<void> deleteDocument(String id) async {
     await (_db.delete(_db.documents)..where((t) => t.id.equals(id))).go();
   }
-
 }

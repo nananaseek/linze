@@ -49,9 +49,9 @@ class $DocumentsTable extends Documents
   late final GeneratedColumn<String> content = GeneratedColumn<String>(
     'content',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.string,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
   );
   @override
   late final GeneratedColumnWithTypeConverter<DocumentState, String> state =
@@ -71,8 +71,7 @@ class $DocumentsTable extends Documents
     aliasedName,
     false,
     type: DriftSqlType.dateTime,
-    requiredDuringInsert: false,
-    defaultValue: currentDateAndTime,
+    requiredDuringInsert: true,
   );
   @override
   List<GeneratedColumn> get $columns => [
@@ -121,14 +120,14 @@ class $DocumentsTable extends Documents
         _contentMeta,
         content.isAcceptableOrUnknown(data['content']!, _contentMeta),
       );
-    } else if (isInserting) {
-      context.missing(_contentMeta);
     }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
         createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
       );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
     }
     return context;
   }
@@ -154,7 +153,7 @@ class $DocumentsTable extends Documents
       content: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}content'],
-      )!,
+      ),
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -181,7 +180,7 @@ class DocumentsCompanion extends UpdateCompanion<DocumentEntity> {
   final Value<String> id;
   final Value<String> name;
   final Value<String> imgPath;
-  final Value<String> content;
+  final Value<String?> content;
   final Value<DocumentState> state;
   final Value<DateTime> createdAt;
   final Value<int> rowid;
@@ -198,15 +197,15 @@ class DocumentsCompanion extends UpdateCompanion<DocumentEntity> {
     required String id,
     required String name,
     required String imgPath,
-    required String content,
+    this.content = const Value.absent(),
     required DocumentState state,
-    this.createdAt = const Value.absent(),
+    required DateTime createdAt,
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        name = Value(name),
        imgPath = Value(imgPath),
-       content = Value(content),
-       state = Value(state);
+       state = Value(state),
+       createdAt = Value(createdAt);
   static Insertable<DocumentEntity> custom({
     Expression<String>? id,
     Expression<String>? name,
@@ -231,7 +230,7 @@ class DocumentsCompanion extends UpdateCompanion<DocumentEntity> {
     Value<String>? id,
     Value<String>? name,
     Value<String>? imgPath,
-    Value<String>? content,
+    Value<String?>? content,
     Value<DocumentState>? state,
     Value<DateTime>? createdAt,
     Value<int>? rowid,
@@ -307,9 +306,9 @@ typedef $$DocumentsTableCreateCompanionBuilder =
       required String id,
       required String name,
       required String imgPath,
-      required String content,
+      Value<String?> content,
       required DocumentState state,
-      Value<DateTime> createdAt,
+      required DateTime createdAt,
       Value<int> rowid,
     });
 typedef $$DocumentsTableUpdateCompanionBuilder =
@@ -317,7 +316,7 @@ typedef $$DocumentsTableUpdateCompanionBuilder =
       Value<String> id,
       Value<String> name,
       Value<String> imgPath,
-      Value<String> content,
+      Value<String?> content,
       Value<DocumentState> state,
       Value<DateTime> createdAt,
       Value<int> rowid,
@@ -466,7 +465,7 @@ class $$DocumentsTableTableManager
                 Value<String> id = const Value.absent(),
                 Value<String> name = const Value.absent(),
                 Value<String> imgPath = const Value.absent(),
-                Value<String> content = const Value.absent(),
+                Value<String?> content = const Value.absent(),
                 Value<DocumentState> state = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -484,9 +483,9 @@ class $$DocumentsTableTableManager
                 required String id,
                 required String name,
                 required String imgPath,
-                required String content,
+                Value<String?> content = const Value.absent(),
                 required DocumentState state,
-                Value<DateTime> createdAt = const Value.absent(),
+                required DateTime createdAt,
                 Value<int> rowid = const Value.absent(),
               }) => DocumentsCompanion.insert(
                 id: id,

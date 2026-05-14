@@ -1,10 +1,9 @@
-import 'package:linze/features/documents/domain/use_case/get_document_by_id_provider.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-
 import 'package:linze/features/documents/domain/entity/document_entity.dart';
 import 'package:linze/features/documents/domain/use_case/delete_document_provider.dart';
 import 'package:linze/features/documents/domain/use_case/get_all_documents_provider.dart';
+import 'package:linze/features/documents/domain/use_case/get_document_by_id_provider.dart';
 import 'package:linze/features/documents/domain/use_case/watch_all_documents_provider.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'document_controllers.g.dart';
 

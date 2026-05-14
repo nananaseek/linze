@@ -7,9 +7,9 @@ class Documents extends Table {
   TextColumn get id => text()();
   TextColumn get name => text().withLength(min: 1, max: 100)();
   TextColumn get imgPath => text()();
-  TextColumn get content => text()();
+  TextColumn get content => text().nullable()();
   TextColumn get state => textEnum<DocumentState>()();
-  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get createdAt => dateTime()();
 
 
   @override

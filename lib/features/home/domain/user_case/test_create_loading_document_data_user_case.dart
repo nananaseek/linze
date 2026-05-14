@@ -1,9 +1,9 @@
-import 'package:linze/features/documents/domain/use_case/add_document_user_case.dart';
+import 'package:linze/features/documents/domain/use_case/init_document_user_case.dart';
 import 'package:linze/features/home/domain/repository/i_home_repository.dart';
 
 class TestCreateLodingDocumentDataUserCase {
   final IHomeRepository repository;
-  final AddDocumentUserCase addDocument;
+  final InitDocumentUserCase addDocument;
 
   TestCreateLodingDocumentDataUserCase(this.repository, this.addDocument);
 

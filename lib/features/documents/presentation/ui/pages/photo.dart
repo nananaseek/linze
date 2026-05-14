@@ -1,7 +1,6 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:linze/features/documents/domain/use_case/get_document_by_id_provider.dart';
 import 'package:linze/features/documents/presentation/controllers/document_controllers.dart';
 
 class FullScreenImagePage extends ConsumerWidget {

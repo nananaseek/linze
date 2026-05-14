@@ -1,10 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:linze/core/utils.dart';
-import 'package:linze/features/documents/domain/entity/document_entity.dart';
 import 'package:linze/features/documents/presentation/controllers/document_controllers.dart';
 import 'package:linze/features/documents/presentation/controllers/document_font_size_controllers.dart';
 
@@ -16,7 +16,6 @@ class Document extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final fontSize = ref.watch(documentFontSizeControllerProvider);
     final asyncDocument = ref.watch(getDocumentByIdProvider(id));
     return asyncDocument.when(
       data: (data) => Scaffold(
@@ -51,32 +50,38 @@ class Document extends ConsumerWidget {
                 children: [
                   ItemContainer(
                     height: 200.w,
+                    width: .infinity,
                     child: Stack(
                       alignment: .center,
                       children: [
                         Icon(Icons.photo),
                         GestureDetector(
-                          onTap: () => context.push('/docs/item/photo/${data.id}'),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: AssetImage(data.imgPath),
-                              ),
-                            ),
+                          onTap: () =>
+                              context.push('/docs/item/${data.id}/photo'),
+                          child: Image.file(
+                            File(data.imgPath),
+                            fit: BoxFit.cover,
                           ),
                         ),
                       ],
                     ),
                   ),
-                  ItemContainer(
-                    width: .infinity,
-                    alignment: .topCenter,
-                    child: SelectionArea(
-                      child: Text(
-                        data.content,
-                        style: TextStyle(fontSize: fontSize),
-                      ),
-                    ),
+                  Consumer(
+                    builder: (context, ref, child) {
+                      final fontSize = ref.watch(
+                        documentFontSizeControllerProvider,
+                      );
+                      return ItemContainer(
+                        width: .infinity,
+                        alignment: .topCenter,
+                        child: SelectionArea(
+                          child: Text(
+                            data.content ?? '',
+                            style: TextStyle(fontSize: fontSize),
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),

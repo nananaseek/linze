@@ -58,4 +58,4 @@ final class TestCreateFinishedDocumentDataUserCaseProvider
 }
 
 String _$testCreateFinishedDocumentDataUserCaseHash() =>
-    r'5d874ef72a02cd6bfabf09b9e8a198666509f994';
+    r'2b47f8739ded66301bd9fdd23b854f865b4ee50d';

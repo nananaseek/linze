@@ -1,7 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:linze/features/home/home.dart';
 import 'package:linze/features/documents/documents.dart';
+import 'package:linze/features/home/home.dart';
+
 import 'router_name.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -12,27 +13,29 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/',
         name: homeRoute,
         builder: (context, state) => HomePage(),
-      ),
-      GoRoute(
-        path: '/docs',
-        name: documentListRoute,
-        builder: (context, state) => DocumentsListScreen(),
         routes: [
           GoRoute(
-            path: '/item/:id',
-            name: documentItemRoute,
-            builder: (context, state) {
-              final docId = state.pathParameters['id']!;
-              return Document(id: docId);
-            },
+            path: 'docs',
+            name: documentListRoute,
+            builder: (context, state) => DocumentsListScreen(),
             routes: [
               GoRoute(
-                path: '/photo',
-                name: photoRoute,
+                path: '/item/:id',
+                name: documentItemRoute,
                 builder: (context, state) {
-                  final id = state.pathParameters['id']!;
-                  return FullScreenImagePage(id: id);
+                  final docId = state.pathParameters['id']!;
+                  return Document(id: docId);
                 },
+                routes: [
+                  GoRoute(
+                    path: '/photo',
+                    name: photoRoute,
+                    builder: (context, state) {
+                      final id = state.pathParameters['id']!;
+                      return FullScreenImagePage(id: id);
+                    },
+                  ),
+                ],
               ),
             ],
           ),
