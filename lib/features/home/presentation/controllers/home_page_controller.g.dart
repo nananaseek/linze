@@ -42,7 +42,7 @@ final class HomePageControllerProvider
 }
 
 String _$homePageControllerHash() =>
-    r'0041f441657e0a47219715465fec1788154e4dc8';
+    r'61440780bd71cc1e4dc480cb1a82d287e40e91f5';
 
 abstract class _$HomePageController extends $Notifier<void> {
   void build();

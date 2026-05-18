@@ -6,7 +6,7 @@ class GetAllDocumentsUserCase {
 
   GetAllDocumentsUserCase(this.repository);
 
-  Future<List<DocumentEntity>> execute() {
+  Future<List<DocumentEntity>> call() {
     return repository.getAllDocuments();
   }
 }

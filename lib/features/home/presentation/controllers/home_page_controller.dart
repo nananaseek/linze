@@ -18,24 +18,24 @@ class HomePageController extends _$HomePageController {
   
   Future<void> initDocumentFromCamera({required String name, required String imgPath,}) async {
     final usecase = ref.read(initDocumentDataUserCaseProvider);
-    await usecase.execute(name: name, imgPath: imgPath);
+    await usecase(name: name, imgPath: imgPath);
   }
 
   Future<void> initDocumentFromGallery({required String imgPath,}) async {
     final usecase = ref.read(initDocumentDataUserCaseProvider);
 
     final imageName = imgPath.split('/').last;
-    await usecase.execute(name: imageName, imgPath: imgPath);
+    await usecase(name: imageName, imgPath: imgPath);
 
   }
 
   Future<void> testCreateLoadingDocument() async {
     final usecase = ref.read(testCreateLoadingDocumentDataUserCaseProvider);
-    await usecase.execute();
+    await usecase();
   }
 
   Future<void> testCreateFinishedDocument() async {
     final usecase = ref.read(testCreateFinishedDocumentDataUserCaseProvider);
-    await usecase.execute();
+    await usecase();
   }
 }

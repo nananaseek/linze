@@ -41,7 +41,7 @@ final class GalleryControllerProvider
   }
 }
 
-String _$galleryControllerHash() => r'ec0df7f16b455a887ef361f9c25a39eced9b27d6';
+String _$galleryControllerHash() => r'73d6af44b2f624429f00f4a037b0f737e0347849';
 
 abstract class _$GalleryController extends $Notifier<AsyncValue<void>> {
   AsyncValue<void> build();

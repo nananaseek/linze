@@ -5,7 +5,7 @@ class DeleteDocumentUserCase {
 
   DeleteDocumentUserCase(this.repository);
 
-  Future<void> execute(String id) {
+  Future<void> call(String id) {
     return repository.deleteDocument(id);
   }
 }

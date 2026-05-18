@@ -18,26 +18,24 @@ final routerProvider = Provider<GoRouter>((ref) {
             path: 'docs',
             name: documentListRoute,
             builder: (context, state) => DocumentsListScreen(),
-            routes: [
-              GoRoute(
-                path: '/item/:id',
-                name: documentItemRoute,
-                builder: (context, state) {
-                  final docId = state.pathParameters['id']!;
-                  return Document(id: docId);
-                },
-                routes: [
-                  GoRoute(
-                    path: '/photo',
-                    name: photoRoute,
-                    builder: (context, state) {
-                      final id = state.pathParameters['id']!;
-                      return FullScreenImagePage(id: id);
-                    },
-                  ),
-                ],
-              ),
-            ],
+          ),
+        ],
+      ),
+      GoRoute(
+        path: '/docs/item/:id',
+        name: documentItemRoute,
+        builder: (context, state) {
+          final docId = state.pathParameters['id']!;
+          return Document(id: docId);
+        },
+        routes: [
+          GoRoute(
+            path: '/photo',
+            name: photoRoute,
+            builder: (context, state) {
+              final id = state.pathParameters['id']!;
+              return FullScreenImagePage(id: id);
+            },
           ),
         ],
       ),

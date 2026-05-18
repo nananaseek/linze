@@ -6,7 +6,7 @@ class GetDocumentByIdUserCase {
 
   GetDocumentByIdUserCase(this.repository);
 
-  Future<DocumentEntity> execute(String id) async {
+  Future<DocumentEntity> call(String id) async {
     return repository.getDocumentById(id);
   }
 }

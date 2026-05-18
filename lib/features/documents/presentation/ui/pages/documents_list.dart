@@ -30,7 +30,7 @@ class DocumentsListScreen extends ConsumerWidget {
               final item = data[index];
               return InkWell(
                 borderRadius: .circular(10),
-                onTap: () => context.push('/docs/item/${item.id}'),
+                onTap: () => context.go('/docs/item/${item.id}'),
                 child: Item(
                   name: item.name,
                   imgPath: item.imgPath,

@@ -6,7 +6,7 @@ class InitDocumentUserCase {
 
   InitDocumentUserCase(this.repository);
 
-  Future<void> execute(DocumentEntity doc) {
+  Future<void> call(DocumentEntity doc) {
     return repository.initDocument(doc);
   }
 }

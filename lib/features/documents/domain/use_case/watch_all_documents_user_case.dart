@@ -6,7 +6,7 @@ class WatchAllDocumentsUserCase {
 
   WatchAllDocumentsUserCase(this.repository);
 
-  Stream<List<DocumentEntity>> execute() {
+  Stream<List<DocumentEntity>> call() {
     return repository.watchAllDocuments();
   }
 }

@@ -34,7 +34,7 @@ final class DocumentControllerProvider
 }
 
 String _$documentControllerHash() =>
-    r'1458807ef5d2756fc8a737cc282d2ef8070f12ab';
+    r'2fb59bda75cc3723047003cfe8a198436c68809b';
 
 abstract class _$DocumentController
     extends $StreamNotifier<List<DocumentEntity>> {
@@ -115,7 +115,7 @@ final class GetDocumentByIdProvider
   }
 }
 
-String _$getDocumentByIdHash() => r'8dbc66fcc97b87a83c0ea48fb5b24095343c8410';
+String _$getDocumentByIdHash() => r'901de807c61fc5c3b9cc3c9ab930af0da85cf31d';
 
 final class GetDocumentByIdFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<DocumentEntity>, String> {

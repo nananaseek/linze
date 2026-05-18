@@ -11,17 +11,17 @@ part 'document_controllers.g.dart';
 class DocumentController extends _$DocumentController {
   @override
   Stream<List<DocumentEntity>> build() {
-    return ref.watch(watchAllDocumentsUserCaseProvider).execute();
+    return ref.watch(watchAllDocumentsUserCaseProvider)();
   }
 
   Future<void> deleteAllDB() async {
     final useCaseGetAllDb = ref.read(getAllDocumentsUserCaseProvider);
     final useCaseDelete = ref.read(deleteDocumentUserCaseProvider);
 
-    final db = await useCaseGetAllDb.execute();
+    final db = await useCaseGetAllDb();
 
     for (var item in db) {
-      await useCaseDelete.execute(item.id);
+      await useCaseDelete(item.id);
     }
   }
 
@@ -34,5 +34,5 @@ class DocumentController extends _$DocumentController {
 @riverpod
 FutureOr<DocumentEntity> getDocumentById(Ref ref, String id) async {
   final useCase = ref.read(getDocumentByIdUserCaseProvider);
-  return await useCase.execute(id);
+  return await useCase(id);
 }

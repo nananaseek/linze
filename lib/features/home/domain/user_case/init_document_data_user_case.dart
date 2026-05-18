@@ -1,3 +1,4 @@
+import 'package:linze/core/usecases/usecase.dart';
 import 'package:linze/features/documents/domain/entity/state_enum_entity.dart';
 import 'package:linze/features/documents/domain/use_case/init_document_user_case.dart';
 import 'package:linze/features/home/domain/repository/i_home_repository.dart';
@@ -8,7 +9,7 @@ class InitDocumentDataUserCase {
 
   InitDocumentDataUserCase(this.repository, this.addDocument);
 
-  Future<void> execute({
+  Future<void> call({
     required String name,
     required String imgPath,
   }) async {
@@ -18,6 +19,6 @@ class InitDocumentDataUserCase {
       content: '',
       state: DocumentState.loding
     );
-    await addDocument.execute(dataToInit);
+    await addDocument(dataToInit);
   }
 }

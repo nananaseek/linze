@@ -5,7 +5,7 @@ class TakeImageFromGalleryUseCase {
 
   TakeImageFromGalleryUseCase({required this.repository});
 
-  Future<String?> execute() async {
+  Future<String?> call() async {
     final imagePath = await repository.takeImage();
     return imagePath;
   }

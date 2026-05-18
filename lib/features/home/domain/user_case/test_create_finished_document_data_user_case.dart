@@ -7,8 +7,8 @@ class TestCreateFinishedDocumentDataUserCase {
 
   TestCreateFinishedDocumentDataUserCase(this.repository, this.addDocument);
 
-  Future<void> execute() async {
+  Future<void> call() async {
     final dataToCreate = await repository.testCreateFinishedDocumentData();
-    await addDocument.execute(dataToCreate);
+    await addDocument(dataToCreate);
   }
 }
