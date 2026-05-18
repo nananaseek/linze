@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,16 +12,30 @@ import 'package:linze/features/home/presentation/widgets/test_buttons_for_create
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    DateTime? _lastPressedAt;
     final controller = ref.watch(homeCameraControlerProvider);
 
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) return;
-        if (context.mounted) context.go('/docs');
+
+        final now = DateTime.now();
+        if (_lastPressedAt == null ||
+            now.difference(_lastPressedAt!) > const Duration(seconds: 2)) {
+          _lastPressedAt = now;
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Center(child: Text('Press back again to exit')),
+              duration: Duration(seconds: 2),
+            ),
+          );
+        } else {
+          exit(0);
+        }
       },
       child: Scaffold(
         backgroundColor: Colors.black,
@@ -34,11 +51,21 @@ class HomePage extends ConsumerWidget {
                     // SizedBox.expand(),
                     // controller.whenData((data) => SizedBox(width: .infinity, child: CameraPreview(data!))).requireValue,
                     controller.when(
-                      data: (data) =>
-                          SizedBox(width: .infinity, child: CameraPreview(data!)),
-                      error: (e, st) => Center(child: Text('Reboot application!')),
-                      loading: () =>
-                          Container(color: Colors.black, width: .infinity, child: Center(child: CircularProgressIndicator(color: Colors.indigo,),),),
+                      data: (data) => SizedBox(
+                        width: .infinity,
+                        child: CameraPreview(data!),
+                      ),
+                      error: (e, st) =>
+                          Center(child: Text('Reboot application!')),
+                      loading: () => Container(
+                        color: Colors.black,
+                        width: .infinity,
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            color: Colors.indigo,
+                          ),
+                        ),
+                      ),
                     ),
                     // Container(color: Colors.black, width: .infinity,),
                     Positioned(
@@ -59,7 +86,7 @@ class HomePage extends ConsumerWidget {
                   ],
                 ),
               ),
-      
+
               Expanded(child: BottomPanel()),
             ],
           ),
